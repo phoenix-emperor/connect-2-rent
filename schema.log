@@ -1,0 +1,12 @@
+AVAILABLE TABLES:
+file:///D:/web-dev/connect-2-rent/check_schema.mjs:9
+  console.log(Object.keys(json.definitions))
+                     ^
+
+TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at main (file:///D:/web-dev/connect-2-rent/check_schema.mjs:9:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+Node.js v24.11.1
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76
