@@ -16,6 +16,9 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
+    if (error.message.includes('fetch failed')) {
+      return { error: 'Network error: Unable to reach the server. Please check your internet connection and try again.' }
+    }
     return { error: error.message }
   }
 

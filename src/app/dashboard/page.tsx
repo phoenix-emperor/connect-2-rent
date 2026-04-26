@@ -48,8 +48,9 @@ export default async function DashboardPage() {
             {profile?.first_name} {profile?.last_name}
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{user.email}</p>
-          <div style={{ marginTop: '8px' }}>
-             <span className="badge badge-primary">{profile?.role}</span>
+          <div style={{ marginTop: '16px', background: 'var(--action-primary)', color: 'white', padding: '12px 16px', borderRadius: '8px', textAlign: 'center' }}>
+            <span style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.8, marginBottom: '2px' }}>Account Status</span>
+            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{profile?.role === 'LANDLORD' ? 'Landlord' : 'Renter'}</span>
           </div>
         </div>
 
