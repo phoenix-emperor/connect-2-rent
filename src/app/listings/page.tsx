@@ -59,7 +59,7 @@ export default async function ListingsPage() {
                     <div className="listing-card__placeholder">
                       <Home size={48} />
                     </div>
-                    <div className="listing-card__price">${listing.price}/mo</div>
+                    <div className="listing-card__price">₦{listing.price}/mo</div>
                     <div className="listing-card__status-badge badge badge-success">New</div>
                   </div>
                   

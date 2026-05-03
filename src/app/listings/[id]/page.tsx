@@ -71,7 +71,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           <div className="listing-sidebar">
             <div className="card" style={{ position: 'sticky', top: '100px' }}>
               <div style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '24px' }}>
-                ${listing.price} <span style={{ fontSize: '15px', color: 'var(--text-muted)', fontWeight: '500' }}>/ month</span>
+                ₦{listing.price} <span style={{ fontSize: '15px', color: 'var(--text-muted)', fontWeight: '500' }}>/ month</span>
               </div>
               
               <div className="divider" style={{ marginBlock: '20px' }}></div>

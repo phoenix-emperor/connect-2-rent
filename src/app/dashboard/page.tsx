@@ -111,7 +111,7 @@ export default async function DashboardPage() {
                     </div>
                     <div style={{ padding: '16px' }}>
                        <h3 style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>{listing.title}</h3>
-                       <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>${listing.price} / mo &middot; {listing.status}</p>
+                       <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>₦{listing.price} / mo &middot; {listing.status}</p>
                        <div style={{ display: 'flex', gap: '8px' }}>
                          <Link href={`/listings/${listing.id}`} className="btn btn-ghost btn-sm" style={{ flex: 1 }}>View</Link>
                          <button className="btn btn-outline btn-sm" style={{ flex: 1 }}>Edit</button>

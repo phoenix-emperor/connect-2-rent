@@ -29,7 +29,16 @@ export default function RegisterPage() {
         </div>
 
         <form action={formAction} className="form-group">
-          {state.error && <p className="form-error" style={{ textAlign: 'center', marginBottom: '16px' }}>{state.error}</p>}
+          {state.error && (
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <p className="form-error">{state.error}</p>
+              {state.error.includes('already exists') && (
+                <p style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  <Link href="/login" style={{ color: 'var(--primary)', fontWeight: '600' }}>Sign in instead →</Link>
+                </p>
+              )}
+            </div>
+          )}
           
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>

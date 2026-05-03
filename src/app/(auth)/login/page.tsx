@@ -37,7 +37,13 @@ export default function LoginPage() {
           <label className="form-label" style={{ marginTop: '8px' }}>Password</label>
           <input className="form-input" name="password" type="password" required placeholder="••••••••" />
 
-          <button className="btn btn-primary btn-lg" type="submit" disabled={isPending} style={{ marginTop: '24px', width: '100%' }}>
+          <div style={{ textAlign: 'right', marginTop: '-4px' }}>
+            <Link href="/forgot-password" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: '600' }}>
+              Forgot password?
+            </Link>
+          </div>
+
+          <button className="btn btn-primary btn-lg" type="submit" disabled={isPending} style={{ marginTop: '16px', width: '100%' }}>
             {isPending ? 'Signing in...' : 'Sign In'}
           </button>
         </form>

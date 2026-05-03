@@ -24,7 +24,20 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refresh session – IMPORTANT: do not remove
-  const { data: { user } } = await supabase.auth.getUser()
+  // Uses Promise.race with a 3-second timeout so a slow/unreachable Supabase
+  // never blocks the proxy for 30-60 s worth of retries.
+  let user = null
+  try {
+    const result = await Promise.race([
+      supabase.auth.getUser(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('supabase_timeout')), 3000)
+      ),
+    ])
+    user = (result as Awaited<ReturnType<typeof supabase.auth.getUser>>).data.user
+  } catch {
+    // Network error or timeout – treat as unauthenticated
+  }
 
   const protectedPaths = ['/dashboard', '/messages']
   const isProtectedPath = protectedPaths.some(p => request.nextUrl.pathname.startsWith(p))

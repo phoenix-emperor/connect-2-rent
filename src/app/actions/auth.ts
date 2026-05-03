@@ -10,17 +10,19 @@ export async function login(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  })
-
-  if (error) {
-    if (error.message.includes('fetch failed')) {
-      return { error: 'Network error: Unable to reach the server. Please check your internet connection and try again.' }
+  let signInError: string | null = null
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      signInError = error.message.toLowerCase().includes('fetch') || error.message.toLowerCase().includes('network')
+        ? 'Network error: Unable to reach the server. Please check your internet connection and try again.'
+        : error.message
     }
-    return { error: error.message }
+  } catch {
+    signInError = 'Network error: Unable to reach the server. Please check your internet connection and try again.'
   }
+
+  if (signInError) return { error: signInError }
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
@@ -39,24 +41,32 @@ export async function signup(formData: FormData) {
     return { error: 'Please fill out all fields.' }
   }
 
-  const { error, data } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-         // Custom data for trigger or client-side reading maybe?
-         // In a robust implementation, we might do this within a SQL trigger on auth.users insert.
-         // Let's pass the role here just in case.
-         role,
-         first_name: firstName,
-         last_name: lastName
+  let signUpError: string | null = null
+  try {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          role,
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
+    })
+    if (error) {
+      const msg = error.message.toLowerCase()
+      if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('email address is invalid')) {
+        signUpError = 'An account with this email already exists. Try signing in instead.'
+      } else {
+        signUpError = error.message
       }
     }
-  })
-
-  if (error) {
-    return { error: error.message }
+  } catch {
+    signUpError = 'Network error: Unable to reach the server. Please check your internet connection and try again.'
   }
+
+  if (signUpError) return { error: signUpError }
 
   // Profile creation is now safely handled by a Postgres trigger to bypass RLS restrictions and cookie delays.
 
