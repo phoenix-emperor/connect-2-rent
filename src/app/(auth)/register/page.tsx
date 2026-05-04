@@ -50,6 +50,9 @@ export default function RegisterPage() {
               <input className="form-input" name="lastName" required placeholder="Doe" />
             </div>
           </div>
+          
+          <label className="form-label" style={{ marginTop: '8px' }}>Phone Number (Optional)</label>
+          <input className="form-input" name="phone" type="tel" placeholder="e.g. 08012345678" />
 
           <label className="form-label" style={{ marginTop: '8px' }}>Email</label>
           <input className="form-input" name="email" type="email" required placeholder="you@example.com" />

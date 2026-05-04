@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   if (isLandlord) {
     const { data: listings } = await supabase
       .from('listings')
-      .select('*')
+      .select('*, images:listing_images(url)')
       .eq('landlord_id', user.id)
       .order('created_at', { ascending: false })
     if (listings) myListings = listings
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>₦{listing.price} / mo &middot; {listing.status}</p>
                        <div style={{ display: 'flex', gap: '8px' }}>
                          <Link href={`/listings/${listing.id}`} className="btn btn-ghost btn-sm" style={{ flex: 1 }}>View</Link>
-                         <button className="btn btn-outline btn-sm" style={{ flex: 1 }}>Edit</button>
+                         <Link href={`/dashboard/edit-listing/${listing.id}`} className="btn btn-outline btn-sm" style={{ flex: 1, textAlign: 'center' }}>Edit</Link>
                        </div>
                     </div>
                   </div>

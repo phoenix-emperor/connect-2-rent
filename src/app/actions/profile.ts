@@ -11,14 +11,16 @@ export async function updateProfile(formData: FormData) {
 
   const firstName = formData.get('firstName') as string
   const lastName  = formData.get('lastName') as string
+  const phone     = formData.get('phone') as string
 
   if (!firstName || !lastName) return { error: 'First and last name are required.' }
 
   try {
     const { error } = await supabase
       .from('profiles')
-      .update({ first_name: firstName, last_name: lastName })
+      .update({ first_name: firstName, last_name: lastName, phone: phone || null })
       .eq('id', user.id)
+
 
     if (error) return { error: error.message }
   } catch {

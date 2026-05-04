@@ -104,6 +104,17 @@ export default function SettingsClient({
             </div>
 
             <div>
+              <label className="form-label">Phone Number</label>
+              <input
+                className="form-input"
+                name="phone"
+                type="tel"
+                defaultValue={profile?.phone ?? ''}
+                placeholder="e.g. 08012345678"
+              />
+            </div>
+
+            <div>
               <label className="form-label">Email Address</label>
               <input
                 className="form-input"

@@ -36,6 +36,8 @@ export async function signup(formData: FormData) {
   const role = formData.get('role') as string
   const firstName = formData.get('firstName') as string
   const lastName = formData.get('lastName') as string
+  const phone = formData.get('phone') as string
+
 
   if (!email || !password || !role || !firstName || !lastName) {
     return { error: 'Please fill out all fields.' }
@@ -51,6 +53,7 @@ export async function signup(formData: FormData) {
           role,
           first_name: firstName,
           last_name: lastName,
+          phone: phone || null,
         },
       },
     })
