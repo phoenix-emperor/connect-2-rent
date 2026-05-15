@@ -30,7 +30,9 @@ export default async function DashboardPage() {
       .select('*, images:listing_images(url)')
       .eq('landlord_id', user.id)
       .order('created_at', { ascending: false })
-    if (listings) myListings = listings
+    if (listings) {
+      myListings = listings
+    }
   }
 
   return (

@@ -20,8 +20,7 @@ async function getLandlordUser() {
 async function uploadImages(
   supabase: Awaited<ReturnType<typeof createClient>>,
   listingId: string,
-  files: File[],
-  startOrder = 0,
+  files: File[]
 ) {
   for (const [i, file] of files.entries()) {
     if (file.size === 0) continue
@@ -36,8 +35,7 @@ async function uploadImages(
       const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/listing-images/${path}`
       await supabase.from('listing_images').insert({
         listing_id: listingId,
-        url,
-        order: startOrder + i,
+        url
       })
     }
   }
@@ -70,6 +68,7 @@ export async function createListing(formData: FormData) {
         description,
         price,
         location,
+        status:        'ACTIVE',
         bedrooms:      isNaN(bedrooms)  ? null : bedrooms,
         bathrooms:     isNaN(bathrooms) ? null : bathrooms,
         property_type: propertyType || null,
@@ -133,11 +132,7 @@ export async function updateListing(formData: FormData) {
     // Upload any new images
     const images = (formData.getAll('images') as File[]).filter(f => f.size > 0)
     if (images.length) {
-      const { data: current } = await supabase
-        .from('listing_images').select('"order"').eq('listing_id', listingId)
-        .order('order', { ascending: false }).limit(1)
-      const startOrder = (current?.[0]?.order ?? -1) + 1
-      await uploadImages(supabase, listingId, images, startOrder)
+      await uploadImages(supabase, listingId, images)
     }
   } catch {
     return { error: 'Something went wrong. Please try again.' }

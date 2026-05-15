@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import EditListingClient from './EditListingClient'
 
-export default async function EditListingPage({ params }: { params: { id: string } }) {
+export default async function EditListingPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -10,7 +11,7 @@ export default async function EditListingPage({ params }: { params: { id: string
   const { data: listing } = await supabase
     .from('listings')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('landlord_id', user.id)  // ensure ownership
     .single()
 
@@ -19,8 +20,7 @@ export default async function EditListingPage({ params }: { params: { id: string
   const { data: images } = await supabase
     .from('listing_images')
     .select('*')
-    .eq('listing_id', params.id)
-    .order('order', { ascending: true })
+    .eq('listing_id', id)
 
   return <EditListingClient listing={listing} images={images ?? []} />
 }

@@ -3,16 +3,18 @@ import { createClient } from '@/lib/supabase/server'
 import { MapPin, Bed, Bath, MessageSquare } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
-export default async function ListingDetailPage({ params }: { params: { id: string } }) {
+export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const { data: listing, error } = await supabase
     .from('listings')
     .select(`
       *,
-      profiles:landlord_id ( id, first_name, last_name, avatar_url )
+      profiles ( id, first_name, last_name, avatar_url ),
+      listing_images ( id, url )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !listing) {
@@ -26,10 +28,25 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           &larr; Back to Listings
         </Link>
         
-        <div className="gallery gallery--single" style={{ marginBottom: '32px' }}>
-          <div className="gallery__main bg-surface" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-            <span style={{ fontSize: '48px' }}>📸</span>
+        <div style={{ marginBottom: '32px' }}>
+          <div className="gallery gallery--single">
+            <div className="gallery__main bg-surface" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              {listing.listing_images && listing.listing_images.length > 0 ? (
+                <img src={listing.listing_images[0].url} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: '48px' }}>📸</span>
+              )}
+            </div>
           </div>
+          {listing.listing_images && listing.listing_images.length > 1 && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '16px', marginTop: '16px' }}>
+              {listing.listing_images.slice(1).map((img: any) => (
+                 <div key={img.id} style={{ aspectRatio: '1/1', overflow: 'hidden', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                    <img src={img.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                 </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '48px' }}>
@@ -95,9 +112,29 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
                 </div>
               </div>
 
-              <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                <MessageSquare size={18} /> Contact Landlord
-              </button>
+              <div style={{ marginTop: '24px' }}>
+                <form action={async (formData: FormData) => {
+                  'use server'
+                  const { sendMessage } = await import('@/app/actions/messages')
+                  await sendMessage(formData)
+                }} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <input type="hidden" name="listing_id" value={listing.id} />
+                  <input type="hidden" name="receiver_id" value={listing.landlord_id} />
+                  
+                  <textarea 
+                    name="content" 
+                    className="form-textarea" 
+                    placeholder="Hi, I am interested in this property..." 
+                    required 
+                    rows={3}
+                    style={{ minHeight: '80px', fontSize: '14px' }}
+                  ></textarea>
+                  
+                  <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                    <MessageSquare size={18} /> Contact Landlord
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 

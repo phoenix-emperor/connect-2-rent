@@ -24,11 +24,12 @@
 .DS_Store
 *.pem
 
-# debug
+# debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -39,3 +40,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Debug / scratch scripts (may contain hardcoded credentials or temp data)
+check_schema.mjs
+dump_schema.mjs
+db-test.ts
+db-test2.mjs
+
+# JSON data dumps from debugging sessions
+dashboard_listings.json
+debug_listings.json
+schema.json
+
+# Internal test API route (not for production)
+src/app/api/test/

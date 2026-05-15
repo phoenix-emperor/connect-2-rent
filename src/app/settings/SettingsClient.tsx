@@ -1,10 +1,10 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useRef } from 'react'
 import { updateProfile, deleteAccount } from '@/app/actions/profile'
 import { logout } from '@/app/actions/auth'
 import Link from 'next/link'
-import { ArrowLeft, User, ShieldAlert, CheckCircle, Trash2, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, User, ShieldAlert, CheckCircle, Trash2, AlertTriangle, Camera } from 'lucide-react'
 
 type ProfileState = { error?: string; success?: string }
 const profileInitial: ProfileState = {}
@@ -16,7 +16,6 @@ export default function SettingsClient({
   user: { id: string; email?: string }
   profile: any
 }) {
-  // ── Profile form ──────────────────────────────────────────
   const [profileState, profileAction, profilePending] = useActionState(
     async (_prevState: ProfileState, formData: FormData): Promise<ProfileState> => {
       const res = await updateProfile(formData)
@@ -24,6 +23,15 @@ export default function SettingsClient({
     },
     profileInitial
   )
+
+  // ── Avatar preview ─────────────────────────────────────────
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(profile?.avatar_url ?? null)
+
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) setAvatarPreview(URL.createObjectURL(file))
+  }
 
   // ── Delete account ─────────────────────────────────────────
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -40,11 +48,7 @@ export default function SettingsClient({
     <div className="section-sm">
       <div className="container-sm">
         {/* Back */}
-        <Link
-          href="/dashboard"
-          className="btn btn-ghost btn-sm"
-          style={{ marginBottom: '24px', paddingLeft: 0 }}
-        >
+        <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ marginBottom: '24px', paddingLeft: 0 }}>
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
 
@@ -63,7 +67,7 @@ export default function SettingsClient({
             </div>
             <div>
               <h2 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>Profile Information</h2>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Update your name and personal details</p>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Update your name, photo and personal details</p>
             </div>
           </div>
 
@@ -80,47 +84,68 @@ export default function SettingsClient({
               </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div>
-                <label className="form-label">First Name</label>
+            {/* ── Avatar ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <div
+                  className="avatar"
+                  style={{ width: '80px', height: '80px', fontSize: '28px', cursor: 'pointer', border: '3px solid var(--border)' }}
+                  onClick={() => avatarInputRef.current?.click()}
+                >
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                  ) : (
+                    profile?.first_name?.charAt(0)?.toUpperCase() || 'U'
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => avatarInputRef.current?.click()}
+                  style={{
+                    position: 'absolute', bottom: 0, right: 0,
+                    width: '26px', height: '26px', borderRadius: '50%',
+                    background: 'var(--primary)', border: '2px solid var(--bg-card)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Camera size={12} color="#fff" />
+                </button>
                 <input
-                  className="form-input"
-                  name="firstName"
-                  required
-                  defaultValue={profile?.first_name ?? ''}
-                  placeholder="John"
+                  ref={avatarInputRef}
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleAvatarChange}
                 />
               </div>
               <div>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>Profile Photo</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Click the avatar to upload a new photo. JPG, PNG, or WEBP.</p>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label className="form-label">First Name</label>
+                <input className="form-input" name="firstName" required defaultValue={profile?.first_name ?? ''} placeholder="John" />
+              </div>
+              <div>
                 <label className="form-label">Last Name</label>
-                <input
-                  className="form-input"
-                  name="lastName"
-                  required
-                  defaultValue={profile?.last_name ?? ''}
-                  placeholder="Doe"
-                />
+                <input className="form-input" name="lastName" required defaultValue={profile?.last_name ?? ''} placeholder="Doe" />
               </div>
             </div>
 
             <div>
               <label className="form-label">Phone Number</label>
-              <input
-                className="form-input"
-                name="phone"
-                type="tel"
-                defaultValue={profile?.phone ?? ''}
-                placeholder="e.g. 08012345678"
-              />
+              <input className="form-input" name="phone" type="tel" defaultValue={profile?.phone ?? ''} placeholder="e.g. 08012345678" />
             </div>
 
             <div>
               <label className="form-label">Email Address</label>
               <input
-                className="form-input"
-                type="email"
-                value={user.email ?? ''}
-                disabled
+                className="form-input" type="email" value={user.email ?? ''} disabled
                 style={{ opacity: 0.6, cursor: 'not-allowed' }}
               />
               <p className="form-hint" style={{ marginTop: '4px' }}>Email cannot be changed here. Contact support if needed.</p>
@@ -129,19 +154,12 @@ export default function SettingsClient({
             <div>
               <label className="form-label">Account Role</label>
               <div style={{
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '12px 16px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
+                background: 'var(--bg-surface)', border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
               }}>
                 <span style={{
-                  padding: '2px 10px',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '12px',
-                  fontWeight: '700',
+                  padding: '2px 10px', borderRadius: 'var(--radius-full)', fontSize: '12px', fontWeight: '700',
                   background: profile?.role === 'LANDLORD' ? 'var(--primary-light)' : 'var(--secondary-light)',
                   color: profile?.role === 'LANDLORD' ? '#818CF8' : '#34D399',
                   border: `1px solid ${profile?.role === 'LANDLORD' ? 'rgba(99,102,241,0.2)' : 'rgba(16,185,129,0.2)'}`,
@@ -153,16 +171,9 @@ export default function SettingsClient({
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={profilePending}
-                style={{ minWidth: '140px' }}
-              >
+              <button type="submit" className="btn btn-primary" disabled={profilePending} style={{ minWidth: '140px' }}>
                 {profilePending ? (
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span className="spinner" /> Saving…
-                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><span className="spinner" /> Saving…</span>
                 ) : 'Save Changes'}
               </button>
             </div>
@@ -247,13 +258,9 @@ export default function SettingsClient({
                 style={{ minWidth: '140px' }}
               >
                 {deleting ? (
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span className="spinner" /> Deleting…
-                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><span className="spinner" /> Deleting…</span>
                 ) : (
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Trash2 size={14} /> Confirm Delete
-                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Trash2 size={14} /> Confirm Delete</span>
                 )}
               </button>
             </div>

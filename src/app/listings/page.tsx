@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Search, MapPin, Bed, Bath } from 'lucide-react'
+import fs from 'fs'
 
 export default async function ListingsPage() {
   const supabase = await createClient()
@@ -11,7 +12,8 @@ export default async function ListingsPage() {
     .from('listings')
     .select(`
       *,
-      profiles:landlord_id ( first_name, last_name, avatar_url )
+      profiles ( first_name, last_name, avatar_url ),
+      listing_images ( id, url )
     `)
     .eq('status', 'ACTIVE')
     .order('created_at', { ascending: false })
@@ -55,10 +57,13 @@ export default async function ListingsPage() {
               {listings.map((listing: any) => (
                 <Link href={`/listings/${listing.id}`} key={listing.id} className="listing-card">
                   <div className="listing-card__img-wrap">
-                    {/* Placeholder image since we don't have images yet */}
-                    <div className="listing-card__placeholder">
-                      <Home size={48} />
-                    </div>
+                    {listing.listing_images && listing.listing_images.length > 0 ? (
+                      <img src={listing.listing_images[0].url} alt={listing.title} className="listing-card__img" />
+                    ) : (
+                      <div className="listing-card__placeholder">
+                        <Home size={48} />
+                      </div>
+                    )}
                     <div className="listing-card__price">₦{listing.price}/mo</div>
                     <div className="listing-card__status-badge badge badge-success">New</div>
                   </div>

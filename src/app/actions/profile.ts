@@ -9,18 +9,41 @@ export async function updateProfile(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const firstName = formData.get('firstName') as string
-  const lastName  = formData.get('lastName') as string
-  const phone     = formData.get('phone') as string
+  const firstName  = formData.get('firstName') as string
+  const lastName   = formData.get('lastName') as string
+  const phone      = formData.get('phone') as string
+  const avatarFile = formData.get('avatar') as File | null
 
   if (!firstName || !lastName) return { error: 'First and last name are required.' }
 
+  let avatarUrl: string | undefined = undefined
+
+  if (avatarFile && avatarFile.size > 0) {
+    const ext  = avatarFile.name.split('.').pop() ?? 'jpg'
+    const path = `${user.id}/avatar.${ext}`
+
+    const { error: upErr } = await supabase.storage
+      .from('avatars')
+      .upload(path, avatarFile, { contentType: avatarFile.type, upsert: true })
+
+    if (upErr) return { error: 'Failed to upload avatar: ' + upErr.message }
+
+    avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${path}?t=${Date.now()}`
+  }
+
   try {
+    const updateData: Record<string, unknown> = {
+      first_name: firstName,
+      last_name:  lastName,
+      full_name:  `${firstName} ${lastName}`,
+      phone:      phone || null,
+    }
+    if (avatarUrl) updateData.avatar_url = avatarUrl
+
     const { error } = await supabase
       .from('profiles')
-      .update({ first_name: firstName, last_name: lastName, phone: phone || null })
+      .update(updateData)
       .eq('id', user.id)
-
 
     if (error) return { error: error.message }
   } catch {
@@ -38,18 +61,9 @@ export async function deleteAccount() {
   if (!user) redirect('/login')
 
   try {
-    // Delete profile first (listings & messages cascade in DB, or handle explicitly)
     await supabase.from('profiles').delete().eq('id', user.id)
-
-    // Delete auth user — requires service role in production; here we sign out
-    // and the DB trigger / scheduled job handles cleanup.
-    const { error } = await supabase.auth.admin?.deleteUser?.(user.id)
-      ?? { error: null }
-
-    // Fallback: if admin API not available, just sign out
-    if (error) {
-      await supabase.auth.signOut()
-    }
+    const { error } = await supabase.auth.admin?.deleteUser?.(user.id) ?? { error: null }
+    if (error) await supabase.auth.signOut()
   } catch {
     await supabase.auth.signOut()
   }
