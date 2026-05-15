@@ -5,13 +5,14 @@ import { forgotPassword } from '@/app/actions/profile'
 import Link from 'next/link'
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
 
-const initialState = { error: '', success: '' }
+type ForgotState = { error?: string; success?: string }
+const initialState: ForgotState = {}
 
 export default function ForgotPasswordPage() {
   const [state, formAction, isPending] = useActionState(
-    async (prevState: any, formData: FormData) => {
+    async (_prevState: ForgotState, formData: FormData): Promise<ForgotState> => {
       const res = await forgotPassword(formData)
-      return res ?? prevState
+      return res ?? {}
     },
     initialState
   )
