@@ -2,49 +2,49 @@
 
 /* ── TOKENS ─────────────────────────────────────────────── */
 :root {
-  /* Softer, more refined dark mode background */
-  --bg-base: #0F1218;
-  --bg-surface: #151921;
-  --bg-card: #1A1F29;
-  --bg-card-hover: #222936;
-  --bg-glass: rgba(255, 255, 255, 0.03);
-  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+  /* Clean, professional light mode background */
+  --bg-base: #F3F4F6;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F9FAFB;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --bg-glass-hover: rgba(255, 255, 255, 0.95);
 
-  /* Muted blue/gray primary instead of vibrant indigo */
-  --primary: #4F73B8;
-  --primary-hover: #405F9A;
-  --primary-light: rgba(79, 115, 184, 0.15);
-  --primary-glow: 0 0 30px rgba(79, 115, 184, 0.15);
+  /* Trust-building classic Navy/Indigo primary */
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-light: rgba(37, 99, 235, 0.1);
+  --primary-glow: 0 0 0px transparent; /* Remove AI-like glow */
 
-  /* Subtle sage/earthy green for success and secondary accents */
-  --secondary: #588775;
-  --secondary-hover: #476E5F;
-  --secondary-light: rgba(88, 135, 117, 0.15);
-  --secondary-glow: 0 0 30px rgba(88, 135, 117, 0.15);
+  /* Earthy green for success and secondary accents */
+  --secondary: #059669;
+  --secondary-hover: #047857;
+  --secondary-light: rgba(5, 150, 105, 0.1);
+  --secondary-glow: 0 0 0px transparent;
 
   /* Text colors */
-  --text-primary: #F0F2F5;
-  --text-secondary: #A1A8B4;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
   --text-muted: #6B7280;
-  --text-accent: #7899D4; /* Softer blue */
+  --text-accent: #2563EB; 
 
   /* Borders */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --border-focus: rgba(79, 115, 184, 0.5);
+  --border: #E5E7EB;
+  --border-hover: #D1D5DB;
+  --border-focus: rgba(37, 99, 235, 0.3);
 
   /* Status Colors */
-  --error: #D96060;
-  --error-light: rgba(217, 96, 96, 0.1);
-  --warning: #D99A40;
-  --success: #588775;
+  --error: #DC2626;
+  --error-light: rgba(220, 38, 38, 0.1);
+  --warning: #D97706;
+  --success: #059669;
 
-  /* Shadows (less harsh) */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
-  --shadow-primary: 0 4px 20px rgba(79, 115, 184, 0.2);
+  /* Shadows (soft, modern drop shadows) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-primary: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
 
   --radius-xs: 4px;
   --radius-sm: 8px;
