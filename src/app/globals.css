@@ -2,49 +2,49 @@
 
 /* ── TOKENS ─────────────────────────────────────────────── */
 :root {
-  /* Clean, professional light mode background */
-  --bg-base: #F3F4F6;
-  --bg-surface: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F9FAFB;
-  --bg-glass: rgba(255, 255, 255, 0.9);
-  --bg-glass-hover: rgba(255, 255, 255, 0.95);
+  /* Refined dark mode background */
+  --bg-base: #0F1218;
+  --bg-surface: #151921;
+  --bg-card: #1A1F29;
+  --bg-card-hover: #222936;
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
 
-  /* Trust-building classic Navy/Indigo primary */
-  --primary: #2563EB;
-  --primary-hover: #1D4ED8;
-  --primary-light: rgba(37, 99, 235, 0.1);
-  --primary-glow: 0 0 0px transparent; /* Remove AI-like glow */
+  /* Muted blue/gray primary */
+  --primary: #4F73B8;
+  --primary-hover: #405F9A;
+  --primary-light: rgba(79, 115, 184, 0.15);
+  --primary-glow: 0 0 10px rgba(79, 115, 184, 0.05); /* Reduced glow */
 
-  /* Earthy green for success and secondary accents */
-  --secondary: #059669;
-  --secondary-hover: #047857;
-  --secondary-light: rgba(5, 150, 105, 0.1);
-  --secondary-glow: 0 0 0px transparent;
+  /* Subtle sage/earthy green */
+  --secondary: #588775;
+  --secondary-hover: #476E5F;
+  --secondary-light: rgba(88, 135, 117, 0.15);
+  --secondary-glow: 0 0 10px rgba(88, 135, 117, 0.05); /* Reduced glow */
 
   /* Text colors */
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
+  --text-primary: #F0F2F5;
+  --text-secondary: #A1A8B4;
   --text-muted: #6B7280;
-  --text-accent: #2563EB; 
+  --text-accent: #7899D4;
 
   /* Borders */
-  --border: #E5E7EB;
-  --border-hover: #D1D5DB;
-  --border-focus: rgba(37, 99, 235, 0.3);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-focus: rgba(79, 115, 184, 0.5);
 
   /* Status Colors */
-  --error: #DC2626;
-  --error-light: rgba(220, 38, 38, 0.1);
-  --warning: #D97706;
-  --success: #059669;
+  --error: #D96060;
+  --error-light: rgba(217, 96, 96, 0.1);
+  --warning: #D99A40;
+  --success: #588775;
 
-  /* Shadows (soft, modern drop shadows) */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-primary: 0 4px 14px 0 rgba(37, 99, 235, 0.3);
+  /* Shadows (less harsh/glowing) */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
+  --shadow-primary: 0 4px 10px rgba(79, 115, 184, 0.1); /* Reduced primary shadow */
 
   --radius-xs: 4px;
   --radius-sm: 8px;
@@ -80,7 +80,7 @@ input, textarea, select { font-family: inherit; }
 
 /* ── TYPOGRAPHY ─────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #A5B4FC 0%, #6366F1 45%, #10B981 100%);
+  background: linear-gradient(135deg, var(--text-accent) 0%, var(--primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -375,7 +375,7 @@ input, textarea, select { font-family: inherit; }
 }
 .stat-card:hover { border-color: rgba(99,102,241,0.3); box-shadow: var(--primary-glow); }
 .stat-card__val { font-size: 32px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
-.stat-card__val span { background: linear-gradient(135deg,#818CF8,#10B981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-card__val span { background: linear-gradient(135deg, var(--text-accent), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .stat-card__lbl { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
 /* ── HOW IT WORKS ───────────────────────────────────────── */
